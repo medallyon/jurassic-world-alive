@@ -129,6 +129,7 @@ namespace Jurassic_World_Alive
             }
 
             ClearCurrentConsoleLine();
+            Console.CursorTop--;
             Console.CursorVisible = true;
             return SelectedChoice;
         }
