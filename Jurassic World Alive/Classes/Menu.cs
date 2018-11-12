@@ -8,6 +8,13 @@ namespace Jurassic_World_Alive
 {
     class Menu
     {
+        // This is used mainly to allow the Player to read the screen and continue by pressing Enter
+        public static void Continue()
+        {
+            Console.Write("\nPress [ RETURN ] to continue...");
+            Console.ReadLine();
+        }
+
         // Clears only the latest line of the Console
         // https://stackoverflow.com/a/8946847/4672263
         public static void ClearCurrentConsoleLine()

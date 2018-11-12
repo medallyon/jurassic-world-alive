@@ -78,8 +78,7 @@ namespace Jurassic_World_Alive
             else if (playerChoice == 6)
                 this.Quit();
 
-            Console.Write("\nTo proceed, press [ RETURN ]...");
-            Console.ReadLine();
+            Menu.Continue();
             this.ShowMenu();
         }
 
