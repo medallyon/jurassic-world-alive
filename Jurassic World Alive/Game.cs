@@ -57,6 +57,8 @@ namespace Jurassic_World_Alive
         public CircularLinkedList Dinosaurs { get; set; }
         public string PlayerName { get; set; }
 
+        // The GAME constructor
+        // This is where everything starts
         public Game(string playerName = null)
         {
             CurrentSession = this;
@@ -66,18 +68,16 @@ namespace Jurassic_World_Alive
             else
                 this.PlayerName = playerName;
 
+            this.Dinosaurs = new CircularLinkedList();
             if (SessionNames.Contains($"{this.PlayerName.ToLower()}.json"))
             {
-                int loadSession = Menu.CollectChoice("\nIt seems like you've played before! Would you like to load your most recent play session?", new string[] { "Yes", "No" });
+                int loadSession = Menu.CollectChoice("\nIt seems like you've played before! Would you like to load your most recent play session?", new string[] { "Yes", "No (Resets your previous progress)" });
 
                 if (loadSession == 0)
                     this.Dinosaurs = CircularLinkedList.Restore(this.PlayerName);
                 else
                     this.Dinosaurs = new CircularLinkedList();
             }
-
-            else
-                this.Dinosaurs = new CircularLinkedList();
 
             this.ShowMenu();
         }
@@ -106,20 +106,23 @@ namespace Jurassic_World_Alive
             else if (playerChoice == 6)
                 this.Quit();
 
+            if (this.Restart)
+                return;
+
             Menu.Continue();
             this.ShowMenu();
         }
 
         private void VisualiseListWithControls()
         {
-            throw new NotImplementedException();
+            this.Dinosaurs.Visualise();
         }
 
         private void CreateNewDinoDialog()
         {
             string species = Menu.CollectAnswer("Let's make a new Dinosaur! What is the dinosaur's Species Name going to be?");
             DinosaurType type = (DinosaurType)Menu.CollectChoice("\nGreat! What about the dinosaur's Type?", new string[] { DinosaurType.Carnivorous.ToString(), DinosaurType.Herbivorous.ToString() });
-            DinosaurPeriod period = (DinosaurPeriod)Menu.CollectChoice("\nLastly, in which period did the dinosaur live?", new string[] { DinosaurPeriod.Jurassic.ToString(), DinosaurPeriod.Triassic.ToString(), DinosaurPeriod.Cretaceous.ToString() });
+            DinosaurPeriod period = (DinosaurPeriod)Menu.CollectChoice("\nLastly, which period did the dinosaur live in?", new string[] { DinosaurPeriod.Jurassic.ToString(), DinosaurPeriod.Triassic.ToString(), DinosaurPeriod.Cretaceous.ToString() });
 
             Dinosaur dino = new Dinosaur(this.Dinosaurs, species, type, period);
             this.Dinosaurs.Push(dino);
@@ -149,7 +152,40 @@ namespace Jurassic_World_Alive
 
         private void Quit()
         {
-            throw new NotImplementedException();
+            int quit = Menu.CollectChoice("Do you intend to Quit or Restart?", new string[] { "Quit", "Restart" });
+
+            if (quit == 0)
+            {
+                Console.Write($"Alright, {this.PlayerName}. I will save your progress and the next time you come back, you can load your data and keep playing where you left off!\n\n");
+                //this.SaveDinosToFile();
+
+                // Initiate the timer for exiting the process
+                int exitCount = 8;
+
+                System.Timers.Timer exitTimer = new System.Timers.Timer();
+                exitTimer.Interval = 1000;
+
+                // The following code includes a lambda expression, (used multiple times throughout):
+                // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/statements-expressions-operators/lambda-expressions
+                exitTimer.Elapsed += new ElapsedEventHandler((object source, ElapsedEventArgs e) =>
+                {
+                    // This function will be executed every time the Timer lapses (1 second)
+
+                    exitCount--;
+                    Console.Write($"\x000D[{exitCount}] Press [ RETURN ] to exit.");
+                    if (exitCount == 0 || Console.ReadKey().Key == ConsoleKey.Enter)
+                        Environment.Exit(0);
+                });
+
+                exitTimer.Enabled = true;
+
+                // Keep the process alive
+                while (true)
+                    Thread.Sleep(6000);
+            }
+
+            else
+                this.Restart = true;
         }
     }
 

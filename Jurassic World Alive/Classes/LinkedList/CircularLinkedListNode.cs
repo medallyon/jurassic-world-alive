@@ -63,6 +63,16 @@ namespace Jurassic_World_Alive
             this.ParentList = parentList;
         }
 
+        public virtual string[] Columns()
+        {
+            return new string[] { };
+        }
+
+        public virtual string[] Rows()
+        {
+            return new string[] { };
+        }
+
         public CircularLinkedListNode Remove()
         {
             this.ParentList.Remove(this);
