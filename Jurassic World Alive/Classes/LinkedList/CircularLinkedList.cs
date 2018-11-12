@@ -57,7 +57,7 @@ namespace Jurassic_World_Alive
                 return this.Elements;
 
             CircularLinkedListNode[] newList = new CircularLinkedListNode[Math.Max(0, this.Count + additions)];
-            for (int i = 0; i < newList.Length - 1; i++)
+            for (int i = 0; i < newList.Length; i++)
             {
                 if (i == this.Count)
                     break;
@@ -74,7 +74,7 @@ namespace Jurassic_World_Alive
                 return this.Elements;
 
             CircularLinkedListNode[] newList = new CircularLinkedListNode[Math.Max(0, this.Count + items.Length)];
-            for (int i = 0; i < newList.Length - 1; i++)
+            for (int i = 0; i < newList.Length; i++)
             {
                 if (i >= this.Count)
                     newList[i] = items[i - this.Count];
