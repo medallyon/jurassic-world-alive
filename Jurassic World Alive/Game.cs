@@ -86,7 +86,7 @@ namespace Jurassic_World_Alive
         {
             Console.Clear();
             int playerChoice = Menu.CollectChoice($"{this.PlayerName}, " +
-                $"What would you like to do?", new string[] { "Visualise the current list of dinosaurs", "Create a new Dinosaur", "Remove a Dinosaur", "Display a Dinosaur's information", "Load Dinosaurs from a file", "Save Dinosaurs to file", "Quit" });
+                $"What would you like to do?", new string[] { "Visualise the current list of dinosaurs", "Create a new Dinosaur", "Load Dinosaurs from a file", "Save Dinosaurs to file", "Quit" });
             
             Console.Clear();
             // Use of abstraction: Extracting only the most important functions and disregarding low-level details
@@ -95,10 +95,6 @@ namespace Jurassic_World_Alive
                 this.VisualiseListWithControls();
             else if (playerChoice == 1)
                 this.CreateNewDinoDialog();
-            else if (playerChoice == 2)
-                this.RemoveDinoDialog();
-            else if (playerChoice == 3)
-                this.DisplayDinoInfo();
             else if (playerChoice == 4)
                 this.LoadDinosFromFile();
             else if (playerChoice == 5)
@@ -124,16 +120,6 @@ namespace Jurassic_World_Alive
             this.Dinosaurs.Push(dino);
 
             Console.Write($"\nGreat, your new {dino.Species} Dinosaur was added to the Linked List.");
-        }
-
-        private void RemoveDinoDialog()
-        {
-            throw new NotImplementedException();
-        }
-
-        private void DisplayDinoInfo()
-        {
-            throw new NotImplementedException();
         }
 
         private void LoadDinosFromFile()
