@@ -304,16 +304,22 @@ namespace Jurassic_World_Alive
 
                     int dinoChoice = Menu.CollectChoice($"Now, what would you like to do with {{ {this[SelectedChoice].Rows()[0]} }}?", new string[]
                     {
+                        "List Details",
                         "Update Species",
                         "Update Type",
                         "Update Period"
                     });
 
                     if (dinoChoice == 0)
-                        this[SelectedChoice].UpdateSpeciesDialog();
+                    {
+                        Console.WriteLine($"\nHere are the selected Dinosaur's details:\n\nSpecies: {this[SelectedChoice].Species}\nType: {this[SelectedChoice].Type}\nPeriod: {this[SelectedChoice].Period}");
+                        Menu.Continue();
+                    }
                     else if (dinoChoice == 1)
-                        this[SelectedChoice].UpdateTypeDialog();
+                        this[SelectedChoice].UpdateSpeciesDialog();
                     else if (dinoChoice == 2)
+                        this[SelectedChoice].UpdateTypeDialog();
+                    else if (dinoChoice == 3)
                         this[SelectedChoice].UpdatePeriodDialog();
 
                     Console.Clear();
