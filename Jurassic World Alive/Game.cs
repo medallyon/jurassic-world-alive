@@ -120,11 +120,7 @@ namespace Jurassic_World_Alive
 
         private void CreateNewDinoDialog()
         {
-            string species = Menu.CollectAnswer("Let's make a new Dinosaur! What is the dinosaur's Species Name going to be?");
-            DinosaurType type = (DinosaurType)Menu.CollectChoice("\nGreat! What about the dinosaur's Type?", new string[] { DinosaurType.Carnivorous.ToString(), DinosaurType.Herbivorous.ToString() });
-            DinosaurPeriod period = (DinosaurPeriod)Menu.CollectChoice("\nLastly, which period did the dinosaur live in?", new string[] { DinosaurPeriod.Jurassic.ToString(), DinosaurPeriod.Triassic.ToString(), DinosaurPeriod.Cretaceous.ToString() });
-
-            Dinosaur dino = new Dinosaur(this.Dinosaurs, species, type, period);
+            Dinosaur dino = Dinosaur.CreateNewDialog(this.Dinosaurs);
             this.Dinosaurs.Push(dino);
 
             Console.Write($"\nGreat, your new {dino.Species} Dinosaur was added to the Linked List.");
