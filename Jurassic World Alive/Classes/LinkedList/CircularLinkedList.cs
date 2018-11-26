@@ -167,5 +167,167 @@ namespace Jurassic_World_Alive
             if (!removed)
                 throw new Exception("The specified item is not part of this Linked List");
         }
+
+        /*
+         * Table should look something like this:
+         * Species   |   Type   |   Period
+         * XXXXXXXXX | XXXXXXXX | XXXXXXXXXX
+         */
+        public void Visualise()
+        {
+            if (this.Count == 0)
+            {
+                Console.Write("The list is empty!\n");
+                return;
+            }
+
+            string[] columns = this[0].Columns();
+            Console.Write("   " + String.Join("  ", columns.Select(x => x.PadRight(20))) + "\n");
+
+            for (int i = 0; i < this.Count; i++)
+            {
+                if (i == 0)
+                    Console.Write(" > ");
+                else
+                    Console.Write("   ");
+
+                Console.Write($"{this[i].ToString()}\n");
+            }
+
+            Console.Write("\nTap [ RETURN ] to act on the currently selected Dino\n" +
+                "Tap [ INSERT ] to insert a Dino at the currently selected index\n" +
+                "Tap [ DELETE ] to delete the currently selected Dino\n" +
+                "Tap [ BACKSPACE ] to return to the Menu");
+
+            Console.CursorVisible = false;
+            int SelectedChoice = 0;
+            int[] lastStringPos = new int[] { Console.CursorLeft, Console.CursorTop };
+
+            ConsoleKey currentInput = Console.ReadKey().Key;
+            int currentOptionCursorPos = Console.CursorTop - 4 - this.Count;
+
+            while (currentInput != ConsoleKey.Backspace)
+            {
+                // Update options ('>' pointer) to reflect a change in selection
+                if (currentInput == ConsoleKey.UpArrow || currentInput == ConsoleKey.W)
+                {
+                    SelectedChoice--;
+
+                    if (SelectedChoice >= 0)
+                    {
+                        Console.SetCursorPosition(0, --currentOptionCursorPos);
+                        Console.Write(" > ");
+                        Console.SetCursorPosition(0, Console.CursorTop + 1);
+                        Console.Write("   ");
+                    }
+
+                    // Also allow for rotating selection
+                    else
+                    {
+                        SelectedChoice = this.Count - 1;
+
+                        Console.SetCursorPosition(0, currentOptionCursorPos);
+                        Console.Write("   ");
+
+                        currentOptionCursorPos += SelectedChoice;
+                        Console.SetCursorPosition(0, currentOptionCursorPos);
+                        Console.Write(" > ");
+                    }
+                }
+
+                else if (currentInput == ConsoleKey.DownArrow || currentInput == ConsoleKey.S)
+                {
+                    SelectedChoice++;
+
+                    if (SelectedChoice <= this.Count - 1)
+                    {
+                        Console.SetCursorPosition(0, ++currentOptionCursorPos);
+                        Console.Write(" > ");
+                        Console.SetCursorPosition(0, Console.CursorTop - 1);
+                        Console.Write("   ");
+                    }
+
+                    // Also allow for rotating selection
+                    else
+                    {
+                        SelectedChoice = 0;
+
+                        Console.SetCursorPosition(0, currentOptionCursorPos);
+                        Console.Write("   ");
+
+                        currentOptionCursorPos -= this.Count - 1;
+                        Console.SetCursorPosition(0, currentOptionCursorPos);
+                        Console.Write(" > ");
+                    }
+                }
+
+                else if (currentInput == ConsoleKey.Enter || currentInput == ConsoleKey.Spacebar)
+                {
+                    Console.Write("\n\n");
+                    Console.CursorVisible = true;
+
+                    if (SelectedChoice == this.Count - 1)
+                    {
+                        Console.CursorVisible = true;
+
+                        Dinosaur newDino = Dinosaur.CreateNewDialog(this);
+                        this.Push(newDino);
+                    }
+
+                    else
+                    {
+                        int dinoChoice = Menu.CollectChoice($"Now, what would you like to do with {{ {this[SelectedChoice].Rows()[0]} }}?", new string[]
+                        {
+                            "Update Species",
+                            "Update Type",
+                            "Update Period"
+                        });
+
+                        if (dinoChoice == 0)
+                            this[SelectedChoice].UpdateSpeciesDialog();
+                        else if (dinoChoice == 1)
+                            this[SelectedChoice].UpdateTypeDialog();
+                        else if (dinoChoice == 2)
+                            this[SelectedChoice].UpdatePeriodDialog();
+                    }
+
+                    Console.Clear();
+                    this.Visualise();
+
+                    return;
+                }
+
+                else if (currentInput == ConsoleKey.Insert)
+                {
+                    Console.Write("\n\n");
+                    Console.CursorVisible = true;
+
+                    Dinosaur newDino = Dinosaur.CreateNewDialog(this);
+                    this.Insert(SelectedChoice, newDino);
+
+                    Console.Clear();
+                    this.Visualise();
+
+                    return;
+                }
+
+                else if (currentInput == ConsoleKey.Delete)
+                {
+                    this.RemoveAt(SelectedChoice);
+
+                    Console.Clear();
+                    this.Visualise();
+
+                    return;
+                }
+
+                // Reset cursor to last line
+                Console.SetCursorPosition(lastStringPos[0], lastStringPos[1]);
+                currentInput = Console.ReadKey().Key;
+            }
+
+            Console.CursorVisible = true;
+            Console.WriteLine();
+        }
     }
 }
