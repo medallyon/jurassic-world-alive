@@ -5,11 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
+using Newtonsoft.Json;
+
 namespace Jurassic_World_Alive
 {
-    class CircularLinkedList : IEnumerable<CircularLinkedListNode>
+    class CircularLinkedList : IEnumerable<Dinosaur>
     {
-        private CircularLinkedListNode[] Elements { get; set; }
+        private Dinosaur[] Elements { get; set; }
 
         public int Count
         {
@@ -19,9 +21,9 @@ namespace Jurassic_World_Alive
             }
         }
 
-        public IEnumerator<CircularLinkedListNode> GetEnumerator()
+        public IEnumerator<Dinosaur> GetEnumerator()
         {
-            foreach (CircularLinkedListNode x in this.Elements)
+            foreach (Dinosaur x in this.Elements)
                 yield return x;
         }
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
@@ -29,7 +31,7 @@ namespace Jurassic_World_Alive
             return this.GetEnumerator();
         }
 
-        public CircularLinkedListNode this[int i]
+        public Dinosaur this[int i]
         {
             get
             {
@@ -46,7 +48,7 @@ namespace Jurassic_World_Alive
             this.Elements = new CircularLinkedListNode[0];
         }
 
-        public CircularLinkedList(params CircularLinkedListNode[] elements)
+        public CircularLinkedList(params Dinosaur[] elements)
         {
             this.Elements = elements;
         }
@@ -56,7 +58,7 @@ namespace Jurassic_World_Alive
             if (additions == 0)
                 return this.Elements;
 
-            CircularLinkedListNode[] newList = new CircularLinkedListNode[Math.Max(0, this.Count + additions)];
+            Dinosaur[] newList = new Dinosaur[Math.Max(0, this.Count + additions)];
             for (int i = 0; i < newList.Length; i++)
             {
                 if (i == this.Count)
@@ -68,12 +70,12 @@ namespace Jurassic_World_Alive
             return newList;
         }
 
-        private CircularLinkedListNode[] CreateNewList(params CircularLinkedListNode[] items)
+        private Dinosaur[] CreateNewList(params Dinosaur[] items)
         {
             if (items.Length == 0)
                 return this.Elements;
 
-            CircularLinkedListNode[] newList = new CircularLinkedListNode[Math.Max(0, this.Count + items.Length)];
+            Dinosaur[] newList = new Dinosaur[Math.Max(0, this.Count + items.Length)];
             for (int i = 0; i < newList.Length; i++)
             {
                 if (i >= this.Count)
@@ -85,7 +87,7 @@ namespace Jurassic_World_Alive
             return newList;
         }
 
-        public CircularLinkedList Push(params CircularLinkedListNode[] items)
+        public CircularLinkedList Push(params Dinosaur[] items)
         {
             this.Elements = this.CreateNewList(items);
             return this;
@@ -97,7 +99,7 @@ namespace Jurassic_World_Alive
             return this;
         }
 
-        public CircularLinkedList Insert(int index, CircularLinkedListNode item)
+        public CircularLinkedList Insert(int index, Dinosaur item)
         {
             this.Elements = this.CreateNewList();
             for (int i = index; i < this.Count - 2; i++)
@@ -109,7 +111,7 @@ namespace Jurassic_World_Alive
 
         public CircularLinkedList Pop(int amount = 1)
         {
-            CircularLinkedListNode[] newList = this.CreateNewList(amount * -1);
+            Dinosaur[] newList = this.CreateNewList(amount * -1);
 
             CircularLinkedList poppedItems = new CircularLinkedList(newList);
             this.Elements = newList;
@@ -117,12 +119,12 @@ namespace Jurassic_World_Alive
             return poppedItems;
         }
 
-        public CircularLinkedListNode RemoveAt(int index)
+        public Dinosaur RemoveAt(int index)
         {
             if (index < 0 || index > this.Count - 1)
                 throw new IndexOutOfRangeException();
 
-            CircularLinkedListNode removedDino = this[index];
+            Dinosaur removedDino = this[index];
             for (int i = index; i < this.Count - 2; i++)
                 this[i] = this[i + 1];
 
@@ -149,7 +151,7 @@ namespace Jurassic_World_Alive
             return removedDinos;
         }
 
-        public void Remove(CircularLinkedListNode item)
+        public void Remove(Dinosaur item)
         {
             bool removed = false;
             for (int i = 0; i < this.Count - 1; i++)
