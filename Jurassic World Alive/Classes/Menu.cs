@@ -25,20 +25,51 @@ namespace Jurassic_World_Alive
             Console.SetCursorPosition(0, currentLineCursor);
         }
 
-        // This function simply collects the Player's String Input
-        public static string CollectAnswer(string prompt)
+        // This function simply collects the Player's String Input, up to a maximum number of characters
+        public static string CollectAnswer(string prompt, float maxCharacters = 1 / 0f)
         {
             Console.Write($"{prompt}\n\n > ");
-            string Answer = Console.ReadLine();
+            string Answer = String.Empty;
 
-            while (Answer.Length == 0)
+            while (Answer.Length == 0 || Answer.Length > maxCharacters)
             {
-                Console.CursorTop--;
                 ClearCurrentConsoleLine();
                 Console.Write(" > ");
-                Answer = Console.ReadLine();
+                
+                ConsoleKeyInfo currentKey = Console.ReadKey();
+                while (currentKey.Key != ConsoleKey.Enter)
+                {
+                    if (!(Char.IsLetterOrDigit(currentKey.KeyChar) || currentKey.Key == ConsoleKey.Spacebar || currentKey.Key == ConsoleKey.Backspace))
+                    {
+                        ClearCurrentConsoleLine();
+                        Console.Write($" > {Answer}");
+
+                        currentKey = Console.ReadKey();
+                        continue;
+                    }
+
+                    if (Char.IsLetterOrDigit(currentKey.KeyChar) || currentKey.Key == ConsoleKey.Spacebar)
+                        Answer += currentKey.KeyChar;
+
+                    if (Answer.Length > maxCharacters || (currentKey.Key == ConsoleKey.Backspace && Answer.Length > 0))
+                    {
+                        Answer = Answer.Remove(Answer.Length - 1);
+                        
+                        ClearCurrentConsoleLine();
+                        Console.Write($" > {Answer}");
+                    }
+
+                    if (currentKey.Key == ConsoleKey.Backspace)
+                    {
+                        ClearCurrentConsoleLine();
+                        Console.Write($" > {Answer}");
+                    }
+
+                    currentKey = Console.ReadKey();
+                }
             }
 
+            Console.WriteLine();
             return Answer;
         }
 
@@ -132,6 +163,36 @@ namespace Jurassic_World_Alive
             Console.CursorTop--;
             Console.CursorVisible = true;
             return SelectedChoice;
+        }
+
+        public static Dictionary<string, string[]> CreateTableElements(string[] columns, string[][] rows)
+        {
+            Dictionary<string, string[]> table = new Dictionary<string, string[]>();
+            for (int i = 0; i < columns.Length; i++)
+            {
+                string[] items = new string[rows[i].Length];
+                for (int j = 0; j < items.Length; j++)
+                    items[j] = rows[i][j];
+
+                table.Add(columns[i], items);
+            }
+
+            return table;
+        }
+
+        public static string GenerateTable(string[] columns, string[][] rows, int padding = 20, int spaceBefore = 0)
+        {
+            Dictionary<string, string[]> table = CreateTableElements(columns, rows);
+            string output = new String(' ', spaceBefore) + String.Join("", table.Select((kv) => kv.Key.PadRight(padding)));
+            
+            for (int i = 0; i < rows.Length; i++)
+            {
+                output += "\n" + new String(' ', spaceBefore);
+                for (int j = 0; j < table.Count; j++)
+                    output += rows[i][j].PadRight(padding);
+            }
+
+            return output;
         }
     }
 }
