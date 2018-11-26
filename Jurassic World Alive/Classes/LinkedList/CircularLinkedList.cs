@@ -266,30 +266,19 @@ namespace Jurassic_World_Alive
                     Console.Write("\n\n");
                     Console.CursorVisible = true;
 
-                    if (SelectedChoice == this.Count - 1)
+                    int dinoChoice = Menu.CollectChoice($"Now, what would you like to do with {{ {this[SelectedChoice].Rows()[0]} }}?", new string[]
                     {
-                        Console.CursorVisible = true;
+                        "Update Species",
+                        "Update Type",
+                        "Update Period"
+                    });
 
-                        Dinosaur newDino = Dinosaur.CreateNewDialog(this);
-                        this.Push(newDino);
-                    }
-
-                    else
-                    {
-                        int dinoChoice = Menu.CollectChoice($"Now, what would you like to do with {{ {this[SelectedChoice].Rows()[0]} }}?", new string[]
-                        {
-                            "Update Species",
-                            "Update Type",
-                            "Update Period"
-                        });
-
-                        if (dinoChoice == 0)
-                            this[SelectedChoice].UpdateSpeciesDialog();
-                        else if (dinoChoice == 1)
-                            this[SelectedChoice].UpdateTypeDialog();
-                        else if (dinoChoice == 2)
-                            this[SelectedChoice].UpdatePeriodDialog();
-                    }
+                    if (dinoChoice == 0)
+                        this[SelectedChoice].UpdateSpeciesDialog();
+                    else if (dinoChoice == 1)
+                        this[SelectedChoice].UpdateTypeDialog();
+                    else if (dinoChoice == 2)
+                        this[SelectedChoice].UpdatePeriodDialog();
 
                     Console.Clear();
                     this.Visualise();
