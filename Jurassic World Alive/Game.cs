@@ -95,11 +95,11 @@ namespace Jurassic_World_Alive
                 this.VisualiseListWithControls();
             else if (playerChoice == 1)
                 this.CreateNewDinoDialog();
-            else if (playerChoice == 4)
+            else if (playerChoice == 2)
                 this.LoadDinosFromFile();
-            else if (playerChoice == 5)
+            else if (playerChoice == 3)
                 this.SaveDinosToFile();
-            else if (playerChoice == 6)
+            else if (playerChoice == 4)
                 this.Quit();
 
             if (this.Restart)

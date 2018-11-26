@@ -45,7 +45,7 @@ namespace Jurassic_World_Alive
 
         public CircularLinkedList()
         {
-            this.Elements = new CircularLinkedListNode[0];
+            this.Elements = new Dinosaur[0];
         }
 
         public CircularLinkedList(params Dinosaur[] elements)
@@ -102,8 +102,8 @@ namespace Jurassic_World_Alive
         public CircularLinkedList Insert(int index, Dinosaur item)
         {
             this.Elements = this.CreateNewList();
-            for (int i = index; i < this.Count - 2; i++)
-                this[i + 1] = this[i];
+            for (int i = this.Count - 1; i > index; i--)
+                this[i] = this[i - 1];
 
             this[index] = item;
             return this;
@@ -125,7 +125,7 @@ namespace Jurassic_World_Alive
                 throw new IndexOutOfRangeException();
 
             Dinosaur removedDino = this[index];
-            for (int i = index; i < this.Count - 2; i++)
+            for (int i = index; i < this.Count - 1; i++)
                 this[i] = this[i + 1];
 
             this.Elements = this.CreateNewList(-1);
