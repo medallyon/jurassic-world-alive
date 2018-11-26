@@ -165,7 +165,7 @@ namespace Jurassic_World_Alive
             if (quit == 0)
             {
                 Console.Write($"\nAlright, {this.PlayerName}. I will save your progress and the next time you come back, you can load your data and keep playing where you left off!\n\n");
-                //this.SaveDinosToFile();
+                CircularLinkedList.SaveToFile(this.Dinosaurs);
 
                 // Initiate the timer for exiting the process
                 int exitCount = 8;
