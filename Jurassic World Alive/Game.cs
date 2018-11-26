@@ -69,7 +69,7 @@ namespace Jurassic_World_Alive
                 this.PlayerName = playerName;
 
             this.Dinosaurs = new CircularLinkedList();
-            if (SessionNames.Contains($"{this.PlayerName.ToLower()}.json"))
+            if (SessionNames.Contains($"{Game.SessionPath}{this.PlayerName.ToLower()}.json"))
             {
                 int loadSession = Menu.CollectChoice("\nIt seems like you've played before! Would you like to load your most recent play session?", new string[] { "Yes", "No (Resets your previous progress)" });
 
@@ -129,7 +129,7 @@ namespace Jurassic_World_Alive
 
         private void LoadDinosFromFile()
         {
-            CircularLinkedList.Restore(Game.CurrentSession.PlayerName.ToLower());
+            this.Dinosaurs = CircularLinkedList.Restore(Game.CurrentSession.PlayerName.ToLower());
         }
 
         private void Quit()
@@ -138,7 +138,7 @@ namespace Jurassic_World_Alive
 
             if (quit == 0)
             {
-                Console.Write($"Alright, {this.PlayerName}. I will save your progress and the next time you come back, you can load your data and keep playing where you left off!\n\n");
+                Console.Write($"\nAlright, {this.PlayerName}. I will save your progress and the next time you come back, you can load your data and keep playing where you left off!\n\n");
                 //this.SaveDinosToFile();
 
                 // Initiate the timer for exiting the process

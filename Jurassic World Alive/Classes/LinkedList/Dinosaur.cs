@@ -87,21 +87,6 @@ namespace Jurassic_World_Alive
             return this;
         }
 
-        public string[] Columns()
-        {
-            return new string[] { "Species", "Type", "Period" };
-        }
-
-        public string[] Rows()
-        {
-            return new string[] { this.Species, this.Type.ToString(), this.Period.ToString() };
-        }
-
-        public override string ToString()
-        {
-            return $"{this.Species.PadRight(20)}| {this.Type.ToString().PadRight(20)}| {this.Period.ToString().PadRight(20)}";
-        }
-
         public void UpdateSpeciesDialog()
         {
             this.Species = Menu.CollectAnswer($"\nAlright, what is {{ {this.Species} }}'s new Species going to be?");
@@ -118,6 +103,30 @@ namespace Jurassic_World_Alive
         {
             this.Period = (DinosaurPeriod)Menu.CollectChoice($"\nAlright, what is {{ {this.Species} }}'s new Period going to be?", new string[] { DinosaurPeriod.Jurassic.ToString(), DinosaurPeriod.Triassic.ToString(), DinosaurPeriod.Cretaceous.ToString() });
             Console.Write($"\nThe dinosaur's Period was updated to {{ {this.Period} }}.");
+        }
+
+        public string[] Columns()
+        {
+            return new string[] { "Species", "Type", "Period" };
+        }
+
+        public string[] Rows()
+        {
+            return new string[] { this.Species, this.Type.ToString(), this.Period.ToString() };
+        }
+
+        public override string ToString()
+        {
+            return $"{this.Species.PadRight(20)}| {this.Type.ToString().PadRight(20)}| {this.Period.ToString().PadRight(20)}";
+        }
+
+        public string Serialise()
+        {
+            return $@"{{""Species"": ""{this.Species}"", ""Type"": ""{this.Type}"", ""Period"": ""{this.Period}""}}";
+        }
+        public string Serialize()
+        {
+            return this.Serialise();
         }
     }
 }
