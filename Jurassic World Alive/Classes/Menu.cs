@@ -26,6 +26,7 @@ namespace Jurassic_World_Alive
         }
 
         // This function simply collects the Player's String Input, up to a maximum number of characters
+        // Default `maxCharacters` value is virtual `Infinity`
         public static string CollectAnswer(string prompt, float maxCharacters = 1 / 0f)
         {
             Console.Write($"{prompt}\n\n > ");
