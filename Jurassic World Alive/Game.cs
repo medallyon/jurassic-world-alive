@@ -32,6 +32,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.IO;
+using System.Windows.Forms;
 
 using Newtonsoft.Json;
 
@@ -53,6 +54,7 @@ namespace Jurassic_World_Alive
                 return new List<string>(Directory.GetFiles(SessionPath));
             }
         }
+        public static OpenFileDialog FileBrowser = new OpenFileDialog() { Filter = "JSON files|*.json" };
 
         public CircularLinkedList Dinosaurs { get; set; }
         public string PlayerName { get; set; }
@@ -74,7 +76,7 @@ namespace Jurassic_World_Alive
                 int loadSession = Menu.CollectChoice("\nIt seems like you've played before! Would you like to load your most recent play session?", new string[] { "Yes", "No (Resets your previous progress)" });
 
                 if (loadSession == 0)
-                    this.Dinosaurs = CircularLinkedList.Restore(this.PlayerName);
+                    this.Dinosaurs = CircularLinkedList.Restore(this.PlayerName.ToLower());
                 else
                     this.Dinosaurs = new CircularLinkedList();
             }
@@ -124,12 +126,36 @@ namespace Jurassic_World_Alive
 
         private void SaveDinosToFile()
         {
-            CircularLinkedList.SaveToFile(this.Dinosaurs);
+            Console.Write("The File Browser has been opened. Choose a file or press CANCEL to return to the menu.");
+            DialogResult result = FileBrowser.ShowDialog();
+
+            Console.Clear();
+            if (result == DialogResult.OK)
+                CircularLinkedList.SaveToFile(this.Dinosaurs, FileBrowser.FileName);
+            else if (result == DialogResult.Cancel)
+            {
+                Console.WriteLine("The File Browser has been cancelled. Your current dinos will remain.");
+                return;
+            }
+
+            Console.WriteLine("Your dinosaurs were successfully saved to the chosen file. Congratulations!");
         }
 
         private void LoadDinosFromFile()
         {
-            this.Dinosaurs = CircularLinkedList.Restore(Game.CurrentSession.PlayerName.ToLower());
+            Console.Write("The File Browser has been opened. Choose a file or press CANCEL to return to the menu.");
+            DialogResult result = FileBrowser.ShowDialog();
+
+            Console.Clear();
+            if (result == DialogResult.OK)
+                this.Dinosaurs = CircularLinkedList.Restore(FileBrowser.FileName);
+            else if (result == DialogResult.Cancel)
+            {
+                Console.WriteLine("The File Browser has been cancelled. Your current dinos will remain.");
+                return;
+            }
+
+            Console.WriteLine($"You have successfully loaded {this.Dinosaurs.Count} Dinosaurs into your program. Congratulations!!");
         }
 
         private void Quit()
@@ -173,6 +199,8 @@ namespace Jurassic_World_Alive
 
     class Program
     {
+        // For some reason this attribute needs to be set for the `OpenFileDialog` to function
+        [STAThread()]
         static void Main(string[] args)
         {
             if (args.Length == 0)

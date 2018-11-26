@@ -64,7 +64,10 @@ namespace Jurassic_World_Alive
         {
             CircularLinkedList newList = new CircularLinkedList();
 
-            DinoArrayFromJson jsonDinos = JsonConvert.DeserializeObject<DinoArrayFromJson>(File.ReadAllText($"{Game.SessionPath}{sessionName}.json"));
+            if (!sessionName.ToLower().EndsWith(".json"))
+                sessionName = $"{Game.SessionPath}{sessionName}.json";
+
+            DinoArrayFromJson jsonDinos = JsonConvert.DeserializeObject<DinoArrayFromJson>(File.ReadAllText(sessionName));
 
             for (int i = 0; i < jsonDinos.Count; i++)
                 newList.Push(new Dinosaur(newList, jsonDinos[i].Species, jsonDinos[i].Type, jsonDinos[i].Period));
@@ -72,18 +75,18 @@ namespace Jurassic_World_Alive
             return newList;
         }
 
-        public static void SaveToFile(CircularLinkedList list)
+        public static void SaveToFile(CircularLinkedList list, string savePath = null)
         {
-            //string serialisedString = JsonConvert.SerializeObject(list);
+            if (savePath == null)
+                savePath = $"{Game.SessionPath}{Game.CurrentSession.PlayerName.ToLower()}.json";
+
             string[] serialisedDinos = new string[list.Count];
 
             for (int i = 0; i < list.Count; i++)
                 serialisedDinos[i] = list[i].Serialise();
 
             string serialisedString = "[" + String.Join(",", serialisedDinos) + "]";
-            File.WriteAllText($@"{Game.SessionPath}{Game.CurrentSession.PlayerName.ToLower()}.json", serialisedString);
-
-            Console.Write("Your dinosaurs were successfully saved to file. Congratulations!");
+            File.WriteAllText(savePath, serialisedString);
         }
 
         private Dinosaur[] CreateNewList(int additions = 1)
