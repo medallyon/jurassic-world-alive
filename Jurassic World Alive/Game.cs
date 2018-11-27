@@ -35,7 +35,8 @@ using System.Windows.Forms;
 // This namespace will hold all of our classes, which will be available through the syntax "Jurassic_World_Alive.<ClassName>"
 namespace Jurassic_World_Alive
 {
-    // The `Game` class - this will control the overall game loop, such as instantiating new Linked Lists and Dinosaurs, as well as calling the respective menu methods
+    // The `Game` class - this will control the overall game loop, such as instantiating new Linked Lists and Dinosaurs,
+    // as well as calling the respective menu methods
     class Game
     {
         // This variable tells the `Main` function if the user wants to restart the game or straight up quit
@@ -55,7 +56,11 @@ namespace Jurassic_World_Alive
                 return new List<string>(Directory.GetFiles(SessionPath));
             }
         }
-        public static OpenFileDialog FileBrowser = new OpenFileDialog() { Filter = "JSON files|*.json" };
+
+        // These static variables hold instances of <FileBrowser>s, which allow the player to choose file and open or save to them
+        // I created static instances of these because it would be silly to allocate new memory every time the player wants to load a file
+        public static SaveFileDialog FileSaveBrowser = new SaveFileDialog() { Filter = "JSON files|*.json" };
+        public static OpenFileDialog FileOpenBrowser = new OpenFileDialog() { Filter = "JSON files|*.json" };
 
         // This instance of my own implementation of the <CircularLinkedList> is responsible for holding all Dinosaurs
         public CircularLinkedList Dinosaurs { get; set; }
@@ -170,11 +175,11 @@ namespace Jurassic_World_Alive
         private void SaveDinosToFile()
         {
             Console.Write("The File Browser has been opened. Choose a file or press CANCEL to return to the menu.");
-            DialogResult result = FileBrowser.ShowDialog();
+            DialogResult result = FileSaveBrowser.ShowDialog();
 
             Console.Clear();
             if (result == DialogResult.OK)
-                CircularLinkedList.SaveToFile(this.Dinosaurs, FileBrowser.FileName);
+                CircularLinkedList.SaveToFile(this.Dinosaurs, FileSaveBrowser.FileName);
             else if (result == DialogResult.Cancel)
             {
                 Console.WriteLine("The File Browser has been cancelled. Your current dinos will remain.");
@@ -188,12 +193,12 @@ namespace Jurassic_World_Alive
         private void LoadDinosFromFile()
         {
             Console.Write("The File Browser has been opened. Choose a file or press CANCEL to return to the menu.");
-            DialogResult result = FileBrowser.ShowDialog();
+            DialogResult result = FileOpenBrowser.ShowDialog();
 
             Console.Clear();
             if (result == DialogResult.OK)
             {
-                this.Dinosaurs = CircularLinkedList.Restore(FileBrowser.FileName);
+                this.Dinosaurs = CircularLinkedList.Restore(FileOpenBrowser.FileName);
                 CircularLinkedList.SaveToFile(this.Dinosaurs);
             }
             else if (result == DialogResult.Cancel)
