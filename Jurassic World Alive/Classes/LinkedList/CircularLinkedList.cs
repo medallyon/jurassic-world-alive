@@ -206,8 +206,8 @@ namespace Jurassic_World_Alive
 
         /*
          * Table should look something like this:
-         * Species   |   Type   |   Period
-         * XXXXXXXXX | XXXXXXXX | XXXXXXXXXX
+         * Species   | Type     | Period
+         * ########  | ######## | #########
          */
         public void Visualise()
         {
@@ -218,7 +218,7 @@ namespace Jurassic_World_Alive
             }
 
             string[] columns = this[0].Columns();
-            Console.Write("   " + String.Join("  ", columns.Select(x => x.PadRight(20))) + "\n");
+            Console.Write("      " + String.Join("  ", columns.Select(x => x.PadRight(20))) + "\n");
 
             for (int i = 0; i < this.Count; i++)
             {
@@ -227,7 +227,7 @@ namespace Jurassic_World_Alive
                 else
                     Console.Write("   ");
 
-                Console.Write($"{this[i].ToString()}\n");
+                Console.Write($"{i + 1}. {this[i].ToString()}\n");
             }
 
             Console.Write("\nTap [ RETURN ] to act on the currently selected Dino\n" +
