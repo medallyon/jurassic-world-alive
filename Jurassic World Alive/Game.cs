@@ -82,6 +82,8 @@ namespace Jurassic_World_Alive
         // This is where everything starts once a <Game> has been instantiated
         public Game(string playerName = null)
         {
+            Console.Clear();
+
             // Set the static `CurrentSession` variable to `this` so that we can reference this anywhere throughout any class
             // This is important when attempting to Load and Save the Dinosaurs to file
             CurrentSession = this;
@@ -114,7 +116,7 @@ namespace Jurassic_World_Alive
         {
             Console.Clear();
             int playerChoice = Menu.CollectChoice($"{this.PlayerName}, " +
-                $"What would you like to do?", new string[] { "Visualise the current list of dinosaurs", "Create a new Dinosaur", "Save Current Dinosaurs to file", "Load Dinosaurs from a file", "Quit" });
+                $"What would you like to do?", new string[] { "Visualise the current list of dinosaurs", "Create a new Dinosaur", "Save Current Dinosaurs to file", "Load Dinosaurs from a file", "Delete all Dinosaurs in this session", "Quit" });
             
             Console.Clear();
             // Use of abstraction: Extracting only the most important functions and disregarding low-level details
@@ -128,6 +130,8 @@ namespace Jurassic_World_Alive
             else if (playerChoice == 3)
                 this.LoadDinosFromFile();
             else if (playerChoice == 4)
+                this.DeleteDinos();
+            else if (playerChoice == 5)
                 this.Quit();
 
             // If the `Restart` variable was set to true by the `Quit` method, return instead of recursively calling `ShowMenu`
@@ -188,7 +192,10 @@ namespace Jurassic_World_Alive
 
             Console.Clear();
             if (result == DialogResult.OK)
+            {
                 this.Dinosaurs = CircularLinkedList.Restore(FileBrowser.FileName);
+                CircularLinkedList.SaveToFile(this.Dinosaurs);
+            }
             else if (result == DialogResult.Cancel)
             {
                 Console.WriteLine("The File Browser has been cancelled. Your current dinos will remain.");
@@ -196,6 +203,22 @@ namespace Jurassic_World_Alive
             }
 
             Console.WriteLine($"You have successfully loaded {this.Dinosaurs.Count} Dinosaurs into your program. Congratulations!!");
+        }
+
+        // This method deletes the current session if the player agrees
+        private void DeleteDinos()
+        {
+            int playerChoice = Menu.CollectChoice($"Are you sure you want to delete your current session? You have {this.Dinosaurs.Count} Dinos!\nSave your session to an external file if you want to re-import them later.", new string[] { "Yes", "No" });
+
+            Console.Clear();
+            if (playerChoice == 0)
+            {
+                this.Dinosaurs = new CircularLinkedList();
+                File.Delete($@"{Game.SessionPath}{this.PlayerName.ToLower()}.json");
+                Console.WriteLine("Your session was successfully deleted.");
+            }
+            else
+                Console.WriteLine("Your session was not deleted.");
         }
         
         // I believe this method is quite self-explanatory just from the method name. It simply prompts the player if they want to exit the program or restart the game
@@ -206,7 +229,6 @@ namespace Jurassic_World_Alive
             if (quit == 0)
             {
                 Console.Write($"\nAlright, {this.PlayerName}. I will save your progress and the next time you come back, you can load your data and keep playing where you left off!\n\n");
-                CircularLinkedList.SaveToFile(this.Dinosaurs);
 
                 // Initiate the timer for exiting the process
                 int exitCount = 8;

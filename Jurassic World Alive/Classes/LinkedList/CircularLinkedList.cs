@@ -124,12 +124,16 @@ namespace Jurassic_World_Alive
         public CircularLinkedList Push(params Dinosaur[] items)
         {
             this.Elements = this.CreateNewList(items);
+
+            SaveToFile(this);
             return this;
         }
 
         public CircularLinkedList Push(CircularLinkedList items)
         {
             this.Elements = this.CreateNewList(items.ToArray());
+
+            SaveToFile(this);
             return this;
         }
 
@@ -140,6 +144,8 @@ namespace Jurassic_World_Alive
                 this[i] = this[i - 1];
 
             this[index] = item;
+
+            SaveToFile(this);
             return this;
         }
 
@@ -150,6 +156,7 @@ namespace Jurassic_World_Alive
             CircularLinkedList poppedItems = new CircularLinkedList(newList);
             this.Elements = newList;
 
+            SaveToFile(this);
             return poppedItems;
         }
 
@@ -163,6 +170,8 @@ namespace Jurassic_World_Alive
                 this[i] = this[i + 1];
 
             this.Elements = this.CreateNewList(-1);
+
+            SaveToFile(this);
             return removedDino;
         }
 
@@ -182,6 +191,8 @@ namespace Jurassic_World_Alive
             }
 
             this.Elements = newList.Elements;
+
+            SaveToFile(this);
             return removedDinos;
         }
 
@@ -319,6 +330,7 @@ namespace Jurassic_World_Alive
                         this[SelectedChoice].UpdateTypeDialog();
                     else if (dinoChoice == 3)
                         this[SelectedChoice].UpdatePeriodDialog();
+                    SaveToFile(this);
 
                     Console.Clear();
                     this.Visualise();
