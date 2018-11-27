@@ -4,6 +4,10 @@ using System.Linq;
 
 namespace Jurassic_World_Alive
 {
+    /*
+     * The <Menu> class is something I created that handles the general displaying of options and collecting user answers.
+     * I originally created this for last year's software development class, but realised that the application for this class is universal, so I decided to import and further build on it in this project.
+     */
     class Menu
     {
         // This is used mainly to allow the Player to read the screen and continue by pressing Enter
@@ -24,7 +28,7 @@ namespace Jurassic_World_Alive
         }
 
         // This function simply collects the Player's String Input, up to a maximum number of characters
-        // Default `maxCharacters` value is virtual `Infinity`
+        // Default `maxCharacters` value is the C# `float` representation of virtual Mathematical Infinity
         public static string CollectAnswer(string prompt, float maxCharacters = 1 / 0f)
         {
             Console.Write($"{prompt}\n\n > ");
@@ -77,6 +81,7 @@ namespace Jurassic_World_Alive
         {
             Console.Write(prompt + "\n\n");
 
+            // First, display the options in a visually appealing and simply readable manner
             for (int i = 0; i < options.Length; i++)
             {
                 if (i == 0) Console.Write(" > ");
