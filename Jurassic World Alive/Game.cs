@@ -26,24 +26,25 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Timers;
 using System.IO;
+using System.Threading;
+using System.Timers;
 using System.Windows.Forms;
 
-using Newtonsoft.Json;
-
+// We name our namespace `Jurassic_World_Alive`
+// This namespace will hold all of our classes, which will be available through the syntax "Jurassic_World_Alive.<ClassName>"
 namespace Jurassic_World_Alive
 {
+    // The `Game` class - this will control the overall game loop, such as instantiating new Linked Lists and Dinosaurs, as well as calling the respective menu methods
     class Game
     {
+        // This variable tells the `Main` function if the user wants to restart the game or straight up quit
         public bool Restart = false;
 
+        // Here are some static variables that hold some vital information about the current player's session
         public static Game CurrentSession;
         public static readonly string SessionPath = "./sessions/";
+        // This `Getter` returns a new <List> of all the names of all player sessions ever created
         public static List<string> SessionNames
         {
             get
@@ -56,6 +57,7 @@ namespace Jurassic_World_Alive
         }
         public static OpenFileDialog FileBrowser = new OpenFileDialog() { Filter = "JSON files|*.json" };
 
+        // This instance of my own implementation of the <CircularLinkedList> is responsible for holding all Dinosaurs
         public CircularLinkedList Dinosaurs { get; set; }
         public string PlayerName { get; set; }
 
@@ -77,21 +79,28 @@ namespace Jurassic_World_Alive
         }
 
         // The GAME constructor
-        // This is where everything starts
+        // This is where everything starts once a <Game> has been instantiated
         public Game(string playerName = null)
         {
+            // Set the static `CurrentSession` variable to `this` so that we can reference this anywhere throughout any class
+            // This is important when attempting to Load and Save the Dinosaurs to file
             CurrentSession = this;
 
+            // The player may already have a name, if they choose the restart from a previous Game Session
             if (playerName == null)
                 this.PlayerName = Menu.CollectAnswer($"Welcome to Jurassic World Alive! What's your name?");
             else
                 this.PlayerName = playerName;
 
+            // Create a new instance of my custom <CircularLinkedList> with no arguments
             this.Dinosaurs = new CircularLinkedList();
+
+            // Check if the player has previously played and saved their progress
             if (SessionNames.Contains($"{Game.SessionPath}{this.PlayerName.ToLower()}.json"))
             {
                 int loadSession = Menu.CollectChoice("\nIt seems like you've played before! Would you like to load your most recent play session?", new string[] { "Yes", "No (Resets your previous progress)" });
 
+                // If so, call the static function `Restore` from <CircularLinkedList>, which will restore a previous session into a new <CircularLinkedList> that contains all previous Dinosaurs created by this player
                 if (loadSession == 0)
                     this.Dinosaurs = CircularLinkedList.Restore(this.PlayerName.ToLower());
                 else
@@ -121,18 +130,24 @@ namespace Jurassic_World_Alive
             else if (playerChoice == 4)
                 this.Quit();
 
+            // If the `Restart` variable was set to true by the `Quit` method, return instead of recursively calling `ShowMenu`
             if (this.Restart)
                 return;
 
+            // This method simply prompts the user to press the Enter key in order to continue
+            // I found myself re-using the same code over and over and decided to make a static function out of it
             Menu.Continue();
             this.ShowMenu();
         }
 
+        // This visualises the current Dinosaurs stored in `this.Dinosaurs` in an inter-active manner
+        // See `<CircularLinkedList>.Visualise` for more information on how I implemented this
         private void VisualiseListWithControls()
         {
             this.Dinosaurs.Visualise();
         }
 
+        // This method prompts the user to create a new Dinosaur and stores it in `this.Dinosaur` using the list's `Push` function
         private void CreateNewDinoDialog()
         {
             Dinosaur dino = Dinosaur.CreateNewDialog(this.Dinosaurs);
@@ -141,6 +156,13 @@ namespace Jurassic_World_Alive
             Console.Write($"\nGreat, your new {dino.Species} Dinosaur was added to the Linked List.");
         }
 
+        /*
+         * There is no function for either the "Delete Dino" or the "Change Dino Details" functionality.
+         * This is because I have implemented this functionality into the `<CircularLinkedList>.Visualise` method, which provides an inter-active interface that allows for inserting, editing, visualising, and deleting of Dinosaurs.
+         */
+
+        // This method prompts the player to save their Dinosaurs to a file they choose
+        // This does not save the player's Dinosaurs into the persistent session directory, but it allows for the player to save their progress into an external file, which can later be imported from the same or any different session
         private void SaveDinosToFile()
         {
             Console.Write("The File Browser has been opened. Choose a file or press CANCEL to return to the menu.");
@@ -158,6 +180,7 @@ namespace Jurassic_World_Alive
             Console.WriteLine("Your dinosaurs were successfully saved to the chosen file. Congratulations!");
         }
 
+        // This method complements the previous `SaveDinosToFile` method, where it reads a file which the player selects through the file browser and loads the Dinosaurs contained within the file into the current session
         private void LoadDinosFromFile()
         {
             Console.Write("The File Browser has been opened. Choose a file or press CANCEL to return to the menu.");
@@ -174,7 +197,8 @@ namespace Jurassic_World_Alive
 
             Console.WriteLine($"You have successfully loaded {this.Dinosaurs.Count} Dinosaurs into your program. Congratulations!!");
         }
-
+        
+        // I believe this method is quite self-explanatory just from the method name. It simply prompts the player if they want to exit the program or restart the game
         private void Quit()
         {
             int quit = Menu.CollectChoice("Do you intend to Quit or Restart?", new string[] { "Quit", "Restart" });
@@ -186,23 +210,22 @@ namespace Jurassic_World_Alive
 
                 // Initiate the timer for exiting the process
                 int exitCount = 8;
-
-                System.Timers.Timer exitTimer = new System.Timers.Timer();
-                exitTimer.Interval = 1000;
+                System.Timers.Timer exitTimer = new System.Timers.Timer()
+                {
+                    Interval = 1000,
+                    Enabled = true
+                };
 
                 // The following code includes a lambda expression, (used multiple times throughout):
                 // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/statements-expressions-operators/lambda-expressions
                 exitTimer.Elapsed += new ElapsedEventHandler((object source, ElapsedEventArgs e) =>
                 {
                     // This function will be executed every time the Timer lapses (1 second)
-
                     exitCount--;
                     Console.Write($"\x000D[{exitCount}] Press [ RETURN ] to exit.");
                     if (exitCount == 0 || Console.ReadKey().Key == ConsoleKey.Enter)
                         Environment.Exit(0);
                 });
-
-                exitTimer.Enabled = true;
 
                 // Keep the process alive
                 while (true)
@@ -211,22 +234,6 @@ namespace Jurassic_World_Alive
 
             else
                 this.Restart = true;
-        }
-    }
-
-    class Program
-    {
-        // For some reason this attribute needs to be set for the `OpenFileDialog` to function
-        [STAThread()]
-        static void Main(string[] args)
-        {
-            if (args.Length == 0)
-                args = new string[] { null };
-
-            Game instance = new Game(args[0]);
-
-            if (instance.Restart)
-                Main(new string[] { instance.PlayerName });
         }
     }
 }
