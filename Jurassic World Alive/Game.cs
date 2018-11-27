@@ -59,6 +59,23 @@ namespace Jurassic_World_Alive
         public CircularLinkedList Dinosaurs { get; set; }
         public string PlayerName { get; set; }
 
+        /*
+         * The MAIN method
+         * This is where the program starts. It decides if the user is just starting off or restarting from a previous game session.
+         * For some reason the `STAThread` attribute needs to be set on the Main method for the File Browser to function
+         */
+        [STAThread()]
+        static void Main(string[] args)
+        {
+            if (args.Length == 0)
+                args = new string[] { null };
+
+            Game instance = new Game(args[0]);
+
+            if (instance.Restart)
+                Main(new string[] { instance.PlayerName });
+        }
+
         // The GAME constructor
         // This is where everything starts
         public Game(string playerName = null)
