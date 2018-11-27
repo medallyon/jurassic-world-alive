@@ -163,35 +163,5 @@ namespace Jurassic_World_Alive
             Console.CursorVisible = true;
             return SelectedChoice;
         }
-
-        public static Dictionary<string, string[]> CreateTableElements(string[] columns, string[][] rows)
-        {
-            Dictionary<string, string[]> table = new Dictionary<string, string[]>();
-            for (int i = 0; i < columns.Length; i++)
-            {
-                string[] items = new string[rows[i].Length];
-                for (int j = 0; j < items.Length; j++)
-                    items[j] = rows[i][j];
-
-                table.Add(columns[i], items);
-            }
-
-            return table;
-        }
-
-        public static string GenerateTable(string[] columns, string[][] rows, int padding = 20, int spaceBefore = 0)
-        {
-            Dictionary<string, string[]> table = CreateTableElements(columns, rows);
-            string output = new String(' ', spaceBefore) + String.Join("", table.Select((kv) => kv.Key.PadRight(padding)));
-            
-            for (int i = 0; i < rows.Length; i++)
-            {
-                output += "\n" + new String(' ', spaceBefore);
-                for (int j = 0; j < table.Count; j++)
-                    output += rows[i][j].PadRight(padding);
-            }
-
-            return output;
-        }
     }
 }
