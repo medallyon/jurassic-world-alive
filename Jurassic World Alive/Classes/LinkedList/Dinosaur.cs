@@ -105,6 +105,9 @@ namespace Jurassic_World_Alive
         {
             this.Species = Menu.CollectAnswer($"\nAlright, what is {{ {this.Species} }}'s new Species going to be?");
             Console.Write($"\nThe dinosaur's Species was updated to {{ {this.Species} }}.");
+
+            // Persistence
+            CircularLinkedList.SaveToFile(this.ParentList);
         }
 
         // Similar to the static `CreateNewDialog` method, this method guides the player through updating this Dinosaur's Type
@@ -112,6 +115,9 @@ namespace Jurassic_World_Alive
         {
             this.Type = (DinosaurType)Menu.CollectChoice($"\nAlright, what is {{ {this.Species} }}'s new Type going to be?", new string[] { DinosaurType.Carnivorous.ToString(), DinosaurType.Herbivorous.ToString() });
             Console.Write($"\nThe dinosaur's Type was updated to {{ {this.Type} }}.");
+
+            // Persistence
+            CircularLinkedList.SaveToFile(this.ParentList);
         }
 
         // Similar to the static `CreateNewDialog` method, this method guides the player through updating this Dinosaur's Period
@@ -119,6 +125,9 @@ namespace Jurassic_World_Alive
         {
             this.Period = (DinosaurPeriod)Menu.CollectChoice($"\nAlright, what is {{ {this.Species} }}'s new Period going to be?", new string[] { DinosaurPeriod.Jurassic.ToString(), DinosaurPeriod.Triassic.ToString(), DinosaurPeriod.Cretaceous.ToString() });
             Console.Write($"\nThe dinosaur's Period was updated to {{ {this.Period} }}.");
+
+            // Persistence
+            CircularLinkedList.SaveToFile(this.ParentList);
         }
 
         // A special function used in `<CircularLinkedList>.Visualise`
