@@ -218,7 +218,7 @@ namespace Jurassic_World_Alive
          * Species   | Type     | Period
          * ########  | ######## | #########
          */
-        public void Visualise()
+        public void Visualise(int SelectedChoice = 0)
         {
             if (this.Count == 0)
             {
@@ -231,7 +231,8 @@ namespace Jurassic_World_Alive
 
             for (int i = 0; i < this.Count; i++)
             {
-                if (i == 0)
+                // Display the current selection with a caret
+                if (i == SelectedChoice)
                     Console.Write(" > ");
                 else
                     Console.Write("   ");
@@ -245,11 +246,10 @@ namespace Jurassic_World_Alive
                 "Tap [ BACKSPACE ] to return to the Menu");
 
             Console.CursorVisible = false;
-            int SelectedChoice = 0;
             int[] lastStringPos = new int[] { Console.CursorLeft, Console.CursorTop };
 
             ConsoleKey currentInput = Console.ReadKey().Key;
-            int currentOptionCursorPos = Console.CursorTop - 4 - this.Count;
+            int currentOptionCursorPos = Console.CursorTop - 4 - (this.Count - SelectedChoice);
 
             while (currentInput != ConsoleKey.Backspace)
             {
