@@ -222,11 +222,13 @@ namespace Jurassic_World_Alive
         // Pop simply creates a new list using `CreateNewList` with a negative parameter
         public CircularLinkedList Pop(int amount = 1)
         {
-            // `amount * -1` will always be negative, unless `amount` is negative
-            Dinosaur[] newList = this.CreateNewList(amount * -1);
+            // Create a new list with all the (soon-to-be) popped items
+            CircularLinkedList poppedItems = new CircularLinkedList();
+            for (int i = this.Count - amount; i < this.Count; i++)
+                poppedItems.Push(this[i]);
 
-            CircularLinkedList poppedItems = new CircularLinkedList(newList);
-            this.Elements = newList;
+            // `amount * -1` will always be negative, unless `amount` is negative
+            this.Elements = this.CreateNewList(amount * -1);
 
             // Persistence
             SaveToFile(this);
